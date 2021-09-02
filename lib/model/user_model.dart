@@ -1,5 +1,3 @@
-import 'package:xmpp_stone/xmpp_stone.dart';
-
 class User {
 
   static User user = new User._();

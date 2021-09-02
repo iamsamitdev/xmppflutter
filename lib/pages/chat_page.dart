@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 import 'package:xmppflutter/model/user_model.dart';
 
+//ignore: must_be_immutable
 class ChatPage extends StatefulWidget {
 
    xmpp.Chat _chat;

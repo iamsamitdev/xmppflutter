@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 import 'package:xmppflutter/model/user_model.dart';
 import 'package:xmppflutter/pages/chat_page.dart';
+import 'package:xmppflutter/pages/login_page.dart';
 // import 'package:xmppflutter/pages/login_page.dart';
 
+//ignore: must_be_immutable
 class HomePage extends StatefulWidget {
 
   xmpp.Connection _connection;
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   var subsMessages;
 
   List<xmpp.Chat> _chats = [];
+  // var _chats = allchats.firstWhere((element) => element == [], orElse: () => null);
 
   @override
   void initState() {
@@ -65,9 +68,22 @@ class _HomePageState extends State<HomePage> {
       print(buddy.name);
     }); 
 
+    print("Chat length=$_chats.length");
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Chats'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app), 
+            onPressed: (){
+              _connection.connect();
+              Navigator.pushReplacement(context, 
+                MaterialPageRoute(builder: (BuildContext context) => LoginPage())
+              );
+            }
+          )
+        ],
       ),
       body: Center(
         child:_chats.length > 0 ? ListView.builder(
@@ -99,6 +115,7 @@ class _HomePageState extends State<HomePage> {
                 width: 100,
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
+                  controller: TextEditingController(text: "@192.168.1.49"),
                   decoration: InputDecoration(
                     labelText: 'ป้อนชื่อที่ต้องการแชทด้วย'
                   ),
@@ -115,11 +132,14 @@ class _HomePageState extends State<HomePage> {
 
 
   void _handleSubmit(String jid) {
+
+    print(jid);
+
     if(jid.trim().length > 3){
       final xjid = xmpp.Jid.fromFullJid(jid);
       final xmpp.Chat newChat = _chatManager.getChat(xjid);
 
-      // print(xjid);
+      print(xjid);
 
       Navigator.push(context, 
         MaterialPageRoute(builder: (BuildContext context) => 

@@ -11,16 +11,19 @@ class LoginPage extends StatelessWidget {
         title: Text('XMPP Chat'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Container(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Login', style: TextStyle(color: Colors.blue, fontSize: 30),),
-                  FormLogin(),
-                ],
+        child: SingleChildScrollView(
+            child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('XMPP Login', style: TextStyle(color: Colors.blue, fontSize: 30),),
+                    SizedBox(height: 20,),
+                    FormLogin(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -41,8 +44,10 @@ class _FormLoginState extends State<FormLogin> {
   final formKey = GlobalKey<FormState>();
 
   // สร้างตัวแปรเก็บ userid กับ password
-  final TextEditingController jidController = new TextEditingController();
-  final TextEditingController passController = new TextEditingController();
+  final TextEditingController username = new TextEditingController(text: "wichai");
+  final TextEditingController password = new TextEditingController(text: "123456");
+  final TextEditingController host = new TextEditingController(text: "@192.168.1.49");
+  final int port = 5222;
   
   bool _loading = false;
   bool _error = false;
@@ -50,8 +55,9 @@ class _FormLoginState extends State<FormLogin> {
  @override
   void dispose() {
     super.dispose();
-    jidController.dispose();
-    passController.dispose();
+    username.dispose();
+    password.dispose();
+    host.dispose();
   }
 
   @override
@@ -61,44 +67,62 @@ class _FormLoginState extends State<FormLogin> {
       child: Column(
         children: [
           TextFormField(
-            controller: jidController,
+            controller: username,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              labelText: 'jid',
-              icon: Icon(Icons.alternate_email)
+              labelText: 'Username',
+              icon: Icon(Icons.person),
+            ),
+            validator: (jid){
+              if(jid.length >= 3){
+                return null;
+              }else{
+                return 'ป้อนข้อมูลนี้ก่อน';
+              }
+            }
+          ),
+          TextFormField(
+            controller: host,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              labelText: 'Host name',
+              icon: Icon(Icons.domain),
             ),
             validator: (jid){
               if(jid.length > 8){
                 return null;
               }else{
-                return 'Please check this field.';
+                return 'ป้อนข้อมูลนี้ก่อน';
               }
             }
           ),
           TextFormField(
-            controller: passController,
-            keyboardType: TextInputType.emailAddress,
+            controller: password,
+            keyboardType: TextInputType.text,
             obscureText: true,
             decoration: InputDecoration(
-              labelText: 'password',
+              labelText: 'Password',
               icon: Icon(Icons.lock)
             ),
             validator: (pass){
               if(pass.length >= 6){
                 return null;
               }else{
-                return 'Please check this field.';
+                return 'ป้อนข้อมูลนี้ก่อน';
               }
             }
           ),
           SizedBox(height: 10,),
-          if(_error) Text('Authentication failed: check your details', style: TextStyle(color: Colors.red, fontSize: 16),),
+          if(_error) Text('ข้อมูลเข้าระบบไม่ถูกต้อง ลองใหม่', style: TextStyle(color: Colors.red, fontSize: 16),),
           SizedBox(height: 20),
           _loading ? CircularProgressIndicator() 
           : RaisedButton(
             onPressed: () => _handleLogin(context),
-            child: Text('Login'),
-            color: Colors.blue[100],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Login', style: TextStyle(fontSize: 20, color: Colors.white)),
+            ),
+            color: Colors.blue,
           )
         ],
       )
@@ -117,8 +141,8 @@ class _FormLoginState extends State<FormLogin> {
       // print('$jidController, $passController');
     });
 
-    final jid = xmpp.Jid.fromFullJid(jidController.text.trim());
-    final account = xmpp.XmppAccountSettings(jid.userAtDomain, jid.local, jid.domain, passController.text.trim(), 5222, resource: 'xmppstone');
+    final jid = xmpp.Jid.fromFullJid(username.text.trim()+host.text.trim());
+    final account = xmpp.XmppAccountSettings(jid.userAtDomain, jid.local, jid.domain, password.text.trim(), port, resource: 'xmppstone');
     final _connection   = xmpp.Connection(account);
 
     _connection.connect();

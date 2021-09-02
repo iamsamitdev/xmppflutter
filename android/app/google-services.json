@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "366375812316",
+    "project_id": "xmppflutter",
+    "storage_bucket": "xmppflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366375812316:android:edfc6f56e90becf8ce4819",
+        "android_client_info": {
+          "package_name": "com.itgenius.xmppflutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366375812316-7sutr1tt637mvj4p78fssf4aaiescurk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdiYonAGH-UpbIG4uVCULmeAlKr44gXQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366375812316-7sutr1tt637mvj4p78fssf4aaiescurk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
