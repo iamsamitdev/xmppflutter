@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 import 'package:xmppflutter/model/user_model.dart';
+import 'package:xmppflutter/services/rest_api.dart';
 
 //ignore: must_be_immutable
 class ChatPage extends StatefulWidget {
@@ -91,15 +94,32 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  _handleSend(){
+  _handleSend() async {
 
     if(_messageController.text.length > 0){
 
       _chat.sendMessage(_messageController.text);
       _messages.insert(0,MessageChat(jid:User.getUser.jid,text:_messageController.text));
+      
+      print(_chat.jid.local); // ข้อมูล id ของคนที่เราคุยด้วย
+
+      // เรียกใช้งาน API Send Notification
+      var response = await CallAPI().sendFirebaseNoti(
+        {
+          "username": _chat.jid.local,
+          "sender": User.getUser.jid,
+          "message": _messageController.text
+        }
+      );
+
+      var body = json.decode(response.body);
+
+      print(body);
+
       setState(() {
         _messageController.text = '';
       });
+
     }
 
   }

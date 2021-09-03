@@ -38,6 +38,12 @@ dependencies:
   # สำหรับแจ้งเตือนภายในแอพของเรา เมื่อแอพรันอยู่ในโหมด foreground
   flutter_local_notifications: ^2.0.2
 
+  # สำหรับการเรียกทำงานกับ http api ต่างๆ
+  http: ^0.12.2
+
+  # สำหรับบันทึกข้อมูลตัวแปรต่างๆ ไว้ภายในแอพ
+  shared_preferences: 0.5.12+4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

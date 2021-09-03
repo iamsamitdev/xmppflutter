@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'notification_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
 
@@ -58,15 +59,32 @@ class NotificationService {
 
   }
 
-  void _refreshToken(){
+  void _refreshToken() {
     _firebaseMessaging.getToken().then((token) async {
+
       print('token $token');
+      
+      // เก็บตัวแปร token ลง SharePreferrence
+      // สร้าง Object แบบ SharePreferrence
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      
+      // เก็บค่า token ลงตัวแปรแบบ sharedPreferences
+      sharedPreferences.setString('token', token);
+
     }, onError: _tokenRefreshFailure);
   }
 
   // This method will be called device token get refreshed
   void _tokenRefresh(String newToken) async {
+
     print('New Token : $newToken');
+    // เก็บตัวแปร token ลง SharePreferrence
+    // สร้าง Object แบบ SharePreferrence
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    
+    // เก็บค่า token ลงตัวแปรแบบ sharedPreferences
+    sharedPreferences.setString('token', newToken);
+
   }
 
   void _tokenRefreshFailure(error) {

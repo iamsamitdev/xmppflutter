@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 import 'package:xmppflutter/pages/home_page.dart';
+
+import 'package:xmppflutter/services/rest_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatelessWidget {
 
@@ -21,7 +26,7 @@ class LoginPage extends StatelessWidget {
                   children: [
                     Text('XMPP Login', style: TextStyle(color: Colors.blue, fontSize: 30),),
                     SizedBox(height: 20,),
-                    FormLogin(),
+                    FormLogin()
                   ],
                 ),
               ),
@@ -131,7 +136,7 @@ class _FormLoginState extends State<FormLogin> {
 
 
   // สร้งฟังก์ชันสำหรับ SubmitForm
-  _handleLogin(BuildContext context){
+  _handleLogin(BuildContext context) {
     if(!formKey.currentState.validate()) return ;
 
     formKey.currentState.save();
@@ -148,8 +153,27 @@ class _FormLoginState extends State<FormLogin> {
     _connection.connect();
 
     // ทำการ listen
-    _connection.connectionStateStream.listen((xmpp.XmppConnectionState state) {
+    _connection.connectionStateStream.listen((xmpp.XmppConnectionState state) async {
       if(state == xmpp.XmppConnectionState.Ready){
+
+        // อ่านค่าจากตัวแปรแบบ sharedPreferences
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+        // เมื่อ login ผ่านแล้วให้ทำการ register device ตรงนี้
+        var token = sharedPreferences.getString('token');
+
+        // เรียกใช้งาน API Register Device
+        var response = await CallAPI().registerDevice(
+          {
+            "username": username.text.trim(),
+            "token": token
+          }
+        );
+
+        var body = json.decode(response.body);
+
+        print(body);
+
         // ส่งไปหน้า HomePage
         Navigator.pushReplacement(context, 
           MaterialPageRoute(builder: (BuildContext context) => 
